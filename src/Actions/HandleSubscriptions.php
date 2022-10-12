@@ -17,10 +17,10 @@ class HandleSubscriptions implements HandleSubscriptionsContract
      */
     public function checkoutOnSubscription($subscription, $billable, Plan $plan)
     {
-        return $subscription->checkout([
-            'success_url' => config('octo.subscription_index'),
-            'cancel_url' => config('octo.subscription_index'),
-        ]);
+           return $subscription->checkout([
+            'success_url' => $app->make('url')->to(config('octo.subscription_index')),
+            'cancel_url' => $app->make('url')->to(config('octo.subscription_index')),
+         ]);
     }
 
     /**
