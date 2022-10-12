@@ -32,6 +32,16 @@ class HandleSubscriptions implements HandleSubscriptionsContract
      */
     public function subscribeToPlan($billable, Plan $plan)
     {
+        if ($plan->getId() == config('octo.trial.plan-id', '')) {
+            if (!$billable->trial_ends_at === null) {
+               abort(403, 'You already have a trial');
+            }
+            if (config('octo.trial.days', 7) > 0) {
+                $billable->trial_ends_at = now()->addDays(config('octo.trial.days', 7));
+                $billable->save();
+            }
+        }
+        
         $subscription = $billable->newSubscription($plan->getName(), $plan->getId());
 
         $meteredFeatures = $plan->getMeteredFeatures();
